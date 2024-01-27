@@ -1,63 +1,7 @@
 <?php
-//Connection
-function connect(){
-    $server="localhost";
-    $user="root";   
-    $password="";
-    $db="student-portal";
-    $conn= mysqli_connect($server,$user,$password,$db);
-    if (!$conn){
-       die("connection failed:". mysqli_connect_error()); 
-    }
-}
 
 //--Registertion Page--
 
-function register($data){
-   $conn= mysqli_connect("localhost","root","","student-portal");
-    if(isset($_POST['register'])){
-
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $pass = md5($_POST['password']);
-        $cpass = md5($_POST['cpassword']);
-        $father =  $_POST['father_name'];
-        $mother =  $_POST['mother_name'];
-        $mobile =  $_POST['mobile_no'];
-        $kulam = $_POST['kulam'];
-        $kovil = $_POST['kovil'];
-        $pincode = $_POST['pincode'];
-      
-         $select = " SELECT * FROM students WHERE email = '$email' && password = '$pass' ";
-      
-         $result = mysqli_query($conn, $select);
-      
-         if(mysqli_num_rows($result) > 0){
-      
-            $error[] = 'user already exist!';
-      
-         }else{
-      
-            if($pass != $cpass){
-               $error[] = 'password not matched!';
-            }else{
-               $insert = "INSERT INTO students(login_name,email,password,father_name,mother_name,mobile_no,kulam,kovil,pincode,status) 
-               VALUES('$name','$email','$pass','$father','$mother','$mobile','$kulam','$kovil','$pincode','Pending')";
-               $query=mysqli_query($conn, $insert);
-               if($query == true){
-                header('location:success.php');
-              }else{
-                echo 'failed';
-              }
-            }
-         }
-      }
-      if(isset($error)){
-           foreach($error as $error){
-              echo '<span class="error-msg">'.$error.'</span>';
-         }
-    }
-}
 
 
 //--Admin Page--
@@ -132,31 +76,7 @@ function display_table(){
 function login(){
    $conn= mysqli_connect("localhost","root","","student-portal");
 
-   if(isset($_POST['login'])){
-     $name = $_POST['name'];
-     $email = $_POST['email'];
-     $pass = md5($_POST['password']);
-     $sql = " SELECT * FROM students WHERE email = '$email' && password = '$pass' ";
    
-     $result = mysqli_query($conn, $sql);
-   
-      if(mysqli_num_rows($result) > 0){
-       
-       $row = mysqli_fetch_array($result);
-       $_SESSION['user_name'] = $row['login_name'];
-       header('location:pending.php');
-     }else{
-       $error[] = 'incorrect email or password!';
-     }
-   
-   
-   };
-
-   if(isset($error)){
-      foreach($error as $error){
-         echo '<span class="error-msg">'.$error.'</span>';
-      }
-   }
 
 }
 

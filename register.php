@@ -3,10 +3,53 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
-require 'func.php';
+require 'config.php';
 
 //Insert values into registeration table
-connect();
+if(isset($_POST['register'])){
+
+  $name = $_POST['name'];
+  $email = $_POST['email'];
+  $pass = md5($_POST['password']);
+  $cpass = md5($_POST['cpassword']);
+  $dob = $_POST['dob'];
+  $mobile_no =  $_POST['mobile_no'];
+  $pincode = $_POST['pincode'];
+  $bank_name =  $_POST['bank_name'];
+  $acc_type =  $_POST['acc_type'];
+  $acc_no =  $_POST['acc_no'];
+
+   $select = " SELECT * FROM user WHERE email = '$email' && password = '$pass' ";
+
+   $result = mysqli_query($conn, $select);
+
+   if(mysqli_num_rows($result) > 0){
+
+      $error[] = 'user already exist!';
+
+   }else{
+
+      if($pass != $cpass){
+         $error[] = 'password not matched!';
+      }else{
+         $insert = "INSERT INTO user(name,email,password,dob,mobile_no,pincode,bank_name,acc_type,acc_no) 
+         VALUES('$name','$email','$pass','$dob','$mobile_no','$pincode','$bank_name','$acc_type','$acc_no')";
+         $query=mysqli_query($conn, $insert);
+         if($query == true){
+          echo 'Success';
+          //header('location:login.php');
+        }else{
+          echo 'failed';
+        }
+      }
+   }
+}
+if(isset($error)){
+     foreach($error as $error){
+        echo '<span class="error-msg">'.$error.'</span>';
+   }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -69,11 +112,8 @@ connect();
 
                   <!-- Form -->
                   <form class="row g-1 needs-validation" method="POST" action="" novalidate >
-                    <?php
-                    register(0);
-                    ?>
                     <div class="col-12">
-                      <input type="text" name="name" class="form-control" id="yourName" placeholder="Your Name" required>
+                      <input type="text" name="name" class="form-control" id="yourName" placeholder="Your Name (as per Aadhaar)" required>
                       <div class="invalid-feedback">Please, enter your name!</div>
                     </div>
 
@@ -96,7 +136,7 @@ connect();
                     
                     <div class="col-12">
                       <label for="yourName" class="form-label"></label>
-                      <input type="date" name="father_name" class="form-control" id="yourName" placeholder="DOB(DD/MM/YYYY)" required>
+                      <input type="date" name="dob" class="form-control" id="yourName" placeholder="DOB(DD/MM/YYYY)" required>
                       <div class="invalid-feedback">Please, enter your DOB!</div>
                     </div>
                     
@@ -120,19 +160,28 @@ connect();
                     
                     <div class="col-md-6">
                       <label for="yourPassword" class="form-label"></label>
-                      <input type="password" name="password" class="form-control" id="yourPassword" placeholder="Bank Name" required>
-                      <div class="invalid-feedback">Please enter your password!</div>
+                      <input type="text" name="bank_name" class="form-control" id="yourPassword" placeholder="Bank Name" required>
+                      <div class="invalid-feedback">Please enter your Bank Name!</div>
                     </div>
+
                     <div class="col-md-6">
                       <label for="yourPassword" class="form-label"> </label>
-                      <input type="password" name="cpassword" class="form-control" id="yourPassword" placeholder="Bank Type" required>
-                      <div class="invalid-feedback">Please enter your password!</div>
+                       <select id="inputState"  class="form-select" name="acc_type">
+                         <option selected>Account type...</option>
+                         <option>Savings account</option>
+                         <option>Current account</option>
+                         <option>Salary account</option>
+                         <option>Fixed deposit account</option>
+                         <option>Recurring deposit account</option>
+                         <option>NRI accounts</option>
+                       </select>
+                      <div class="invalid-feedback">Please enter your Account Type!</div>
                     </div>
 
                     <div class="col-12">
                       <label for="yourEmail" class="form-label"> </label>
-                      <input type="email" name="email" class="form-control" id="yourEmail" placeholder="Account Number" required>
-                      <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                      <input type="text" name="acc_no" class="form-control" id="yourEmail" placeholder="Account Number" required>
+                      <div class="invalid-feedback">Please enter a valid Account Number!</div>
                     </div>
                     <div class="col-12">
                        <br><p class="text-center small">Already have an account? <a href="login.php">Log in</a></p>

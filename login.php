@@ -3,8 +3,32 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
-require 'func.php';
-connect();
+require 'config.php';
+if(isset($_POST['login'])){
+  //$name = $_POST['name'];
+  $email = $_POST['email'];
+  $pass = md5($_POST['password']);
+  $sql = " SELECT * FROM user WHERE email = '$email' && password = '$pass' ";
+
+  $result = mysqli_query($conn, $sql);
+
+   if(mysqli_num_rows($result) > 0){
+    
+    $row = mysqli_fetch_array($result);
+    //$_SESSION['user_name'] = $row['name'];
+    header('location:register.php');
+  }else{
+    $error[] = 'incorrect email or password!';
+  }
+
+
+};
+
+if(isset($error)){
+   foreach($error as $error){
+      echo '<span class="error-msg">'.$error.'</span>';
+   }
+}
 ?>
 
 <!DOCTYPE html>
@@ -67,10 +91,6 @@ connect();
                   </div>
                   <!-- form -->
                   <form class="row g-3 needs-validation" method="POST" action="" novalidate>
-                    <?php
-                     login();
-                    ?>
-
                     <div class="col-12">
                       <label for="yourEmail" class="form-label">Your Email</label>
                       <input type="email" name="email" class="form-control" id="yourEmail" required>
