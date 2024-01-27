@@ -100,10 +100,10 @@ You will be sent key updates. You may track your grievance yourself from the CM 
         <!-- Footer-->
         <footer class="py-5 bg-dark">
                 <div class="text-center mb-4">
-                    <h6 class="fw-bolder text-light">ADMIN LOGIN</h6>
+                    <h6 class="fw-bolder text-light">USER LOGIN</h6>
                     <h6 class="fw-bolder">
                     <button class="btn btn-outline-dark" name="register" type="submit">
-                    <i class="bi bi bi-person-circle text-light fs-4"></i>
+                        <a href="login.php"><i class="bi bi bi-person-circle text-light fs-4"></i></a>
                     </button>
                     </h6>
                 </div>
